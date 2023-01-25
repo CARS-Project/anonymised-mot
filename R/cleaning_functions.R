@@ -2,7 +2,7 @@ clean_results <- function(data){
   lths <- lengths(data)
   
   lths_unique <- unique(lths)
-  if(!all(lths_unique %in% 13:17)){
+  if(!all(lths_unique %in% c(5,13:17))){
     stop("unknown lengths of row")
   }
 
@@ -15,10 +15,12 @@ clean_results <- function(data){
   data_good <- data_good[2:nrow(data_good),]
   
   #format the bad data
-  data_bad_13 = data_bad[lengths(data_bad) == 13]
-  data_bad_15 = data_bad[lengths(data_bad) == 15]
-  data_bad_16 = data_bad[lengths(data_bad) == 16]
-  data_bad_17 = data_bad[lengths(data_bad) == 17]
+  ldb <- lengths(data_bad)
+  #data_bad_5 = data_bad[ldb == 5]
+  data_bad_13 = data_bad[ldb == 13]
+  data_bad_15 = data_bad[ldb == 15]
+  data_bad_16 = data_bad[ldb == 16]
+  data_bad_17 = data_bad[ldb == 17]
   
   if(length(data_bad_13) > 0){
     data_bad_13 = lapply(data_bad_13, function(x){c(x[1:13],"")})
