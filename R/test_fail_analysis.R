@@ -51,6 +51,7 @@ res <- as.data.frame(res)
 saveRDS(res,"data/MOT_passrate.Rds")
 
 library(ggplot2)
+library(RColorBrewer)
 
 res$pass_rate <- (res$n_pass / res$n_tests) * 100
 res$test_year <- factor(res$test_year, levels = 2005:2021)
