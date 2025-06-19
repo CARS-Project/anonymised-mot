@@ -4,7 +4,9 @@ source("R/cleaning_functions.R")
 
 path_in <- "D:/OneDrive - University of Leeds/Data/CARS/Anoymised MOT/raw"
 path_out <- "D:/OneDrive - University of Leeds/Data/CARS/Anoymised MOT/clean/"
-years <- 2019:2021
+years <- 2023
+
+#2023 needs manul unzip
 
 zips <- list.files(path_in)
 zips <- zips[grepl(".zip",zips)|grepl(".txt.gz",zips)]
@@ -111,6 +113,32 @@ for(yr in years){
       }
       file <- dplyr::bind_rows(res)
       unlink(file.path(tempdir(),"mot"), recursive = TRUE)
+    } else if(yr %in% c(2022:2023)) {
+      res <- list()
+      for(j in seq(1, length(files))){
+        sub <- read_delim(files[j],
+                          delim = "|",
+                        col_types = cols(
+                          test_id = col_integer(),
+                          vehicle_id = col_integer(),
+                          test_date = col_date(format = ""),
+                          test_class_id = col_integer(),
+                          test_type = col_factor(),
+                          test_result = col_factor(),
+                          test_mileage = col_integer(),
+                          postcode_area = col_factor(),
+                          make = col_factor(),
+                          model = col_factor(),
+                          colour = col_factor(),
+                          fuel_type = col_factor(),
+                          cylinder_capacity = col_integer(),
+                          first_use_date = col_date(format = "")
+                        ), lazy = FALSE)
+        
+        res[[j]] <- sub
+      }
+      file <- dplyr::bind_rows(res)
+      unlink(file.path(tempdir(),"mot"), recursive = TRUE)
     } else {
       res <- list()
       for(j in seq(1, length(files))){
@@ -145,7 +173,9 @@ for(yr in years){
     
     res <- list()
     for(j in seq(1, length(files))){
-      sub <- read_csv(files[j], 
+      if(yr %in% c(2022:2023)){
+        sub <- read_delim(files[j], 
+                          delim = "|",
                         col_types = readr::cols(
                           test_id = col_integer(),
                           rfr_id = col_integer(),
@@ -153,7 +183,19 @@ for(yr in years){
                           location_id = col_integer(),
                           dangerous_mark = col_factor()
                         ), 
-                      lazy = FALSE)
+                        lazy = FALSE)
+      } else {
+        sub <- read_csv(files[j], 
+                        col_types = readr::cols(
+                          test_id = col_integer(),
+                          rfr_id = col_integer(),
+                          rfr_type_code = col_factor(),
+                          location_id = col_integer(),
+                          dangerous_mark = col_factor()
+                        ), 
+                        lazy = FALSE)
+      }
+      
       
       res[[j]] <- sub
     }

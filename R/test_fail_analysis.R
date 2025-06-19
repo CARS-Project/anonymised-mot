@@ -8,9 +8,9 @@ for(i in 1:length(files)){
   message(i + 2004)
   result <- readRDS(files[i])
   result <- result[,c("test_id","vehicle_id","test_date","test_result","first_use_date")]
+  result <- result[!result$test_result %in% c("ABA","ABR","ABRVE","R"),]
   result$vehicle_age <- floor(as.numeric(difftime(result$test_date, result$first_use_date, units = "days"))/365)
   result$test_year <- lubridate::year(result$test_date)
-  
   
   result_summary <- result %>%
     group_by(vehicle_id) %>%
@@ -18,11 +18,8 @@ for(i in 1:length(files)){
               n_pass = length(test_result[test_result == "P"]),
               n_fail = length(test_result[test_result == "F"]),
               n_pass_rec = length(test_result[test_result == "PRS"]),
-              n_refused = length(test_result[test_result == "R"]),
-              n_abandoned = length(test_result[test_result == "ABA"]),
-              n_aborted = length(test_result[test_result == "ABR"]),
-              n_aborted_ve = length(test_result[test_result == "ABRVE"]),
               vehicle_age = min(vehicle_age),
+              time_between_tests = difftime(max(test_date),min(test_date),"days"),
               test_year = min(test_year))
   
   result_summary$total_nonpass <- rowSums(result_summary[,4:9])

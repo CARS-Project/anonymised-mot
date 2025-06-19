@@ -3,7 +3,7 @@ library(zoo)
 library(tidyr)
 
 path <- "D:/OneDrive - University of Leeds/Data/CARS/Anoymised MOT/clean/"
-test_data <- readRDS(paste0(path,"test_data_2005_2021.Rds"))
+test_data <- readRDS(paste0(path,"test_data_2005_2023.Rds"))
 
 test_data <- test_data[,c("vehicle_id","test_date","test_mileage","postcode_area")]
 test_data$test_year <- lubridate::year(test_data$test_date)
@@ -24,7 +24,7 @@ test_data_wide <- tidyr::pivot_wider(test_data_summary,
 
 
 test_data_wide <- test_data_wide[,c("vehicle_id",
-                                    paste0("test_mileage_",2005:2021),
-                                    paste0("postcode_area_",2005:2021))]
+                                    paste0("test_mileage_",2005:2023),
+                                    paste0("postcode_area_",2005:2023))]
 
-saveRDS(test_data_wide,paste0(path,"mileage_wide_2005_2021.Rds"))
+saveRDS(test_data_wide,paste0(path,"mileage_wide_2005_2023.Rds"))
